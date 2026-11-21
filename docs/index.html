@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#F6F8FA" />
+    <title>AI-Brain — مرکز کنترل هوشمند</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('aibrain_theme');
+          var dark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (dark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', '#0C1017');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="module" crossorigin src="./assets/index-CafQKWOc.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/icons-CUuCp6WH.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-T20tINeu.js">
+    <link rel="modulepreload" crossorigin href="./assets/markdown-pfQMFQgc.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DFZGygsG.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
