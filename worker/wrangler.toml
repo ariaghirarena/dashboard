@@ -1,0 +1,15 @@
+name = "aibrain-drive-token"
+main = "worker.js"
+compatibility_date = "2025-06-01"
+
+# KV namespace binding — create the namespace and paste its id:
+#   npx wrangler kv namespace create TOKENS
+[[kv_namespaces]]
+binding = "TOKENS"
+id = "PASTE_YOUR_KV_NAMESPACE_ID"
+
+# Secrets (never commit values; set via CLI or dashboard):
+#   npx wrangler secret put GOOGLE_CLIENT_ID
+#   npx wrangler secret put GOOGLE_CLIENT_SECRET
+#   npx wrangler secret put WORKER_KEY
+#   npx wrangler secret put TOKEN_PEPPER

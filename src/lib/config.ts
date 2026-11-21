@@ -30,6 +30,7 @@ export const STORAGE_KEYS = {
   rootFolderId: 'aibrain_root_folder_id',
   driveToken: 'aibrain_drive_token_v1',
   userEmailHint: 'aibrain_google_email_hint',
+  tokenWorkerUrl: 'aibrain_token_worker_url',
 } as const;
 
 export const DRIVE_FOLDER_MIME = 'application/vnd.google-apps.folder';
@@ -42,6 +43,23 @@ export function getEffectiveGoogleClientId(): string {
     // ignore storage errors
   }
   return (import.meta.env.VITE_GOOGLE_CLIENT_ID || '').trim();
+}
+
+/**
+ * Optional Cloudflare Worker that mints Drive access tokens from a stored refresh token.
+ * When set (build-time VITE_TOKEN_WORKER_URL or runtime localStorage override), the app
+ * uses it instead of the Google Identity Services popup flow — this is what makes
+ * "open the link anywhere -> enter passcode -> Drive already connected" work.
+ * Value is the base worker URL without trailing slash, e.g. https://aibrain-drive-token.<you>.workers.dev
+ */
+export function getEffectiveTokenWorkerUrl(): string {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEYS.tokenWorkerUrl);
+    if (saved && saved.trim()) return saved.trim().replace(/\/+$/, '');
+  } catch {
+    // ignore storage errors
+  }
+  return (import.meta.env.VITE_TOKEN_WORKER_URL || '').trim().replace(/\/+$/, '');
 }
 
 export function getEffectiveRootFolderId(): string {

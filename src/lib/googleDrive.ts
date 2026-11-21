@@ -1,4 +1,5 @@
-import { DRIVE_FOLDER_MIME, STORAGE_KEYS } from './config';
+import { DRIVE_FOLDER_MIME, STORAGE_KEYS, getEffectiveTokenWorkerUrl } from './config';
+import { getStoredWorkerKey } from './auth';
 import type { DriveFile } from '../types/drive';
 
 const DRIVE_API = 'https://www.googleapis.com/drive/v3';
@@ -104,12 +105,79 @@ export function waitForGoogleGsi(timeoutMs = 8000): Promise<void> {
   });
 }
 
+/**
+ * Worker mode: fetch a short-lived Drive access token from the token worker.
+ * The refresh token lives only inside the worker's encrypted KV vault.
+ */
+async function requestWorkerAccessToken(
+  workerUrl: string,
+  forceConsent: boolean
+): Promise<{ accessToken: string; expiresAt: number }> {
+  const workerKey = getStoredWorkerKey();
+  if (!workerKey) {
+    throw new DriveAuthExpiredError(
+      'کلید اتصال Worker در این مرورگر پیدا نشد. یک‌بار توسط رمز وارد شوید تا ساخته شود.'
+    );
+  }
+
+  if (forceConsent) {
+    // Re-authorize (e.g. Drive scope revoked): send the user through the consent flow once.
+    window.location.assign(`${workerUrl}/auth?key=${encodeURIComponent(workerKey)}`);
+    return new Promise(() => undefined);
+  }
+
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 15000);
+  try {
+    const res = await fetch(`${workerUrl}/token`, {
+      method: 'POST',
+      headers: { 'x-worker-key': workerKey },
+      signal: controller.signal,
+    });
+    const data = (await res.json().catch(() => ({}))) as {
+      access_token?: string;
+      expires_in?: number;
+      error?: string;
+    };
+    if (res.status === 401) {
+      throw new DriveAuthExpiredError(
+        'کلید Worker نامعتبر است. مقدار WORKER_KEY باید برابر SHA-256 از «aibrain-worker:» + رمز ورود باشد.'
+      );
+    }
+    if (res.status === 409) {
+      throw new DriveAuthExpiredError(
+        'هنوز «مجوز اتصال دائم» روی Worker ثبت نشده است. یک‌بار آدرس /auth سرویس Worker را باز کنید.'
+      );
+    }
+    if (!res.ok || !data.access_token) {
+      throw new DriveAuthExpiredError(data.error || `Worker خطا داد (${res.status}).`);
+    }
+    const expiresInSec = typeof data.expires_in === 'number' ? data.expires_in : 3500;
+    return { accessToken: data.access_token, expiresAt: Date.now() + expiresInSec * 1000 };
+  } catch (err) {
+    if (err instanceof DriveAuthExpiredError) throw err;
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new DriveAuthExpiredError('پاسخ Worker دریافت نشد (زمان انتظار تمام شد). اتصال اینترنت را بررسی کنید.');
+    }
+    throw err;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 export async function requestGoogleAccessToken(options: {
   clientId: string;
   silent?: boolean;
   forceConsent?: boolean;
 }): Promise<{ accessToken: string; expiresAt: number }> {
   const { clientId, silent = false, forceConsent = false } = options;
+
+  // Worker mode takes precedence — no GIS script or popup is needed at all.
+  const workerUrl = getEffectiveTokenWorkerUrl();
+  if (workerUrl) {
+    return requestWorkerAccessToken(workerUrl, forceConsent);
+  }
+
   if (!clientId.trim()) {
     throw new Error('شناسه Google Client ID تنظیم نشده است.');
   }

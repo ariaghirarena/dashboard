@@ -16,6 +16,7 @@ import {
   DRIVE_FOLDER_MIME,
   getEffectiveGoogleClientId,
   getEffectiveRootFolderId,
+  getEffectiveTokenWorkerUrl,
   STORAGE_KEYS,
 } from './lib/config';
 import { isDashboardUnlocked, lockDashboardNow } from './lib/auth';
@@ -66,6 +67,8 @@ export const App: React.FC = () => {
 
   const [clientId, setClientId] = useState<string>(() => getEffectiveGoogleClientId());
   const [rootFolderId, setRootFolderId] = useState<string>(() => getEffectiveRootFolderId());
+  const tokenWorkerConfigured = Boolean(getEffectiveTokenWorkerUrl());
+  const driveConfigured = Boolean(clientId) || tokenWorkerConfigured;
 
   const [session, setSession] = useState<DriveSessionState>(() => {
     const stored = loadStoredDriveToken();
@@ -185,12 +188,12 @@ export const App: React.FC = () => {
   const connectToGoogleDrive = useCallback(
     async (options?: { silent?: boolean; forceConsent?: boolean }) => {
       const effectiveClientId = clientId || getEffectiveGoogleClientId();
-      if (!effectiveClientId) {
+      if (!effectiveClientId && !tokenWorkerConfigured) {
         setActiveSection('settings');
         pushToast(
           'warning',
-          'شناسه Google Client ID تنظیم نشده است',
-          'در بخش تنظیمات، Client ID پروژه Google Cloud خود را وارد کنید.'
+          'هیچ روشی برای اتصال به گوگل درایو تنظیم نشده',
+          'یا URL سرویس Worker را تنظیم کنید یا در بخش تنظیمات، Client ID پروژه Google Cloud خود را وارد کنید.'
         );
         return;
       }
@@ -245,7 +248,7 @@ export const App: React.FC = () => {
         }
       }
     },
-    [clientId, markSessionExpired, pushToast]
+    [clientId, tokenWorkerConfigured, markSessionExpired, pushToast]
   );
 
   // Automatic Silent Token Refresh (keeps session alive seamlessly without logging out!)
@@ -258,7 +261,7 @@ export const App: React.FC = () => {
         setMinutesLeft(Math.max(0, Math.round(remainingMs / 60_000)));
 
         // Auto silent renew 8 minutes before expiry
-        if (remainingMs < 8 * 60_000 && !silentRefreshInFlight.current && clientId) {
+        if (remainingMs < 8 * 60_000 && !silentRefreshInFlight.current && driveConfigured) {
           silentRefreshInFlight.current = true;
           connectToGoogleDrive({ silent: true }).finally(() => {
             silentRefreshInFlight.current = false;
@@ -277,18 +280,18 @@ export const App: React.FC = () => {
       window.clearInterval(interval);
       window.removeEventListener('focus', onFocus);
     };
-  }, [unlocked, session.status, session.expiresAt, clientId, connectToGoogleDrive]);
+  }, [unlocked, session.status, session.expiresAt, driveConfigured, connectToGoogleDrive]);
 
   // Attempt 1 silent recovery on boot if previous session expired and clientId exists
   useEffect(() => {
-    if (!unlocked || session.status !== 'expired' || !clientId || silentRefreshInFlight.current) {
+    if (!unlocked || session.status !== 'expired' || !driveConfigured || silentRefreshInFlight.current) {
       return;
     }
     silentRefreshInFlight.current = true;
     connectToGoogleDrive({ silent: true }).finally(() => {
       silentRefreshInFlight.current = false;
     });
-  }, [unlocked, session.status, clientId, connectToGoogleDrive]);
+  }, [unlocked, session.status, driveConfigured, connectToGoogleDrive]);
 
   const currentFolder = breadcrumbs[breadcrumbs.length - 1] || {
     id: rootFolderId,
