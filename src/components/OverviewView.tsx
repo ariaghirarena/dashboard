@@ -7,6 +7,7 @@ import {
   Copy,
   FileCode2,
   FolderKanban,
+  FolderTree,
   GitBranch,
   Image as ImageIcon,
   Layers,
@@ -59,7 +60,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   }[] = [
     { title: 'پروژه‌ها و فایل‌های نهایی', subtitle: '04-Projects + لینک نسخه‌های گیت‌هاب', section: 'projects', icon: FolderKanban },
     { title: 'چت‌های آرشیوشده آرنا', subtitle: '05-Chats + قرارداد تحویل جلسه', section: 'chats', icon: MessageSquareText },
-    { title: 'حافظه، قوانین و اسکیل‌ها', subtitle: 'MEMORY.md + فرهنگ لغت + ۹ اسکیل', section: 'memory', icon: BookMarked },
+    { title: 'حافظه، قوانین و اسکیل‌ها', subtitle: 'MEMORY.md + فرهنگ لغت + ۱۲ اسکیل', section: 'memory', icon: BookMarked },
     { title: 'رجیستری گیت‌هاب و .io', subtitle: 'لیست ریپوها و صفحات زنده', section: 'github', icon: GitBranch },
     { title: 'گالری تصاویر و برند', subtitle: 'عکس محصولات و دارایی‌های نهایی', section: 'gallery', icon: ImageIcon },
     { title: 'مرورگر کامل درایو', subtitle: `${rootItemsCount} آیتم در ریشه AI-Brain`, section: 'explorer', icon: Layers },
@@ -70,7 +71,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
     { label: 'MEMORY.md', id: AI_BRAIN_IDS.files.memoryIndex, desc: 'حافظه سریع (Hot Cache)' },
     { label: 'glossary.md', id: AI_BRAIN_IDS.files.glossary, desc: 'فرهنگ لغت و نام‌های مستعار' },
     { label: 'lessons-learned.md', id: AI_BRAIN_IDS.files.lessons, desc: 'بانک تجربه‌های موفق و ناموفق' },
-    { label: '02-Skills/INDEX.md', id: AI_BRAIN_IDS.files.skillsIndex, desc: 'فهرست ۹ اسکیل آماده' },
+    { label: '02-Skills/INDEX.md', id: AI_BRAIN_IDS.files.skillsIndex, desc: 'فهرست ۱۲ اسکیل آماده' },
     { label: 'github-registry.md', id: AI_BRAIN_IDS.files.githubRegistry, desc: 'دفترکل ریپوها و صفحات .io' },
   ];
 
@@ -150,6 +151,57 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             )}
           </button>
         </div>
+      </section>
+
+      {/* Featured Twin Gateways: Google Drive files + Skills */}
+      <section aria-label="دسترسی اصلی" className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+          type="button"
+          onClick={() => onNavigate('explorer')}
+          className="group rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)]/60 p-6 sm:p-7 text-start flex flex-col gap-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center">
+              <FolderTree className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <ArrowUpLeft
+              className="w-5 h-5 text-[var(--ink-muted)] group-hover:text-[var(--accent)] transition-colors"
+              aria-hidden="true"
+            />
+          </div>
+          <div>
+            <h2 className="text-base sm:text-lg font-black tracking-tight text-[var(--ink-primary)] group-hover:text-[var(--accent)] transition-colors">
+              فایل‌های گوگل درایو
+            </h2>
+            <p className="mt-1 text-xs text-[var(--ink-secondary)] leading-6">
+              مرور، جستجو، ویرایش، دانلود و آپلود همه‌ی پوشه‌ها و فایل‌های AI-Brain به‌صورت زنده و مستقیم.
+            </p>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onNavigate('skills')}
+          className="group rounded-2xl border border-[var(--accent)]/30 bg-[var(--bg-surface)] hover:border-[var(--accent)] p-6 sm:p-7 text-start flex flex-col gap-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--accent)] text-white flex items-center justify-center">
+              <Sparkles className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <ArrowUpLeft
+              className="w-5 h-5 text-[var(--ink-muted)] group-hover:text-[var(--accent)] transition-colors"
+              aria-hidden="true"
+            />
+          </div>
+          <div>
+            <h2 className="text-base sm:text-lg font-black tracking-tight text-[var(--ink-primary)] group-hover:text-[var(--accent)] transition-colors">
+              اسکیل‌ها <span className="font-mono-ltr">(Skills)</span>
+            </h2>
+            <p className="mt-1 text-xs text-[var(--ink-secondary)] leading-6">
+              ۱۲ اسکیل نصب‌شده در 02-Skills — روی هرکدام بزنید تا متن SKILL.md دیده شود و متن یا پرامپت فعال‌سازی را کپی کنید.
+            </p>
+          </div>
+        </button>
       </section>
 
       {/* Navigation Matrix */}

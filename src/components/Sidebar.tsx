@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   MessageSquareText,
   Settings,
+  Sparkles,
   X,
 } from 'lucide-react';
 import type { NavSection } from '../types/drive';
@@ -31,6 +32,7 @@ interface NavItem {
 const PRIMARY_ITEMS: NavItem[] = [
   { id: 'overview', label: 'نمای کلی', hint: 'آمار و شروع سریع', icon: LayoutDashboard },
   { id: 'explorer', label: 'مرورگر درایو', hint: 'همه پوشه‌ها و فایل‌ها', icon: FolderTree },
+  { id: 'skills', label: 'اسکیل‌ها', hint: 'مهارت‌های نصب‌شده و افزودن اسکیل', icon: Sparkles },
   { id: 'projects', label: 'پروژه‌ها و نهایی‌ها', hint: 'آخرین خروجی و نسخه‌ها', icon: FolderKanban },
   { id: 'chats', label: 'چت‌های آرنا', hint: 'آرشیو و خلاصه گفتگوها', icon: MessageSquareText },
   { id: 'memory', label: 'حافظه و اسکیل‌ها', hint: 'مموری، قوانین و مهارت‌ها', icon: BookMarked },

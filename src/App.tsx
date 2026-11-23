@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { TopBar } from './components/TopBar';
 import { SessionExpiredBanner } from './components/SessionExpiredBanner';
 import { OverviewView } from './components/OverviewView';
+import { SkillsView } from './components/SkillsView';
 import { ExplorerView } from './components/ExplorerView';
 import { MarkdownModal } from './components/MarkdownModal';
 import { ImageLightbox } from './components/ImageLightbox';
@@ -596,6 +597,11 @@ export const App: React.FC = () => {
           title: 'حافظه بلندمدت، قوانین و اسکیل‌ها',
           subtitle: 'پوشه 01-Memory — کلیک روی هر فایل برای خواندن یا ویرایش زنده مستقیم در درایو',
         };
+      case 'skills':
+        return {
+          title: 'اسکیل‌های نصب‌شده (AI-Brain)',
+          subtitle: 'پوشه 02-Skills — کلیک روی هر اسکیل برای خواندن SKILL.md و کپی متن یا پرامپت فعال‌سازی',
+        };
       case 'github':
         return {
           title: 'رجیستری گیت‌هاب و صفحات .github.io',
@@ -675,6 +681,12 @@ export const App: React.FC = () => {
               onOpenFileById={handleOpenFile}
               onConnectDrive={() => connectToGoogleDrive({ forceConsent: false })}
               onOpenUpload={() => setUploadOpen(true)}
+            />
+          ) : activeSection === 'skills' ? (
+            <SkillsView
+              accessToken={session.accessToken}
+              isConnected={session.status === 'connected'}
+              onConnectDrive={() => connectToGoogleDrive({ forceConsent: false })}
             />
           ) : activeSection === 'gallery' ? (
             <MediaGalleryView

@@ -16,6 +16,7 @@ export interface DriveFile {
 export type NavSection =
   | 'overview'
   | 'explorer'
+  | 'skills'
   | 'projects'
   | 'chats'
   | 'memory'

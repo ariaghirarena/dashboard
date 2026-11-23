@@ -6,7 +6,7 @@ const now = '2026-11-20T18:45:00.000Z';
 export const DEMO_FILES_BY_PARENT: Record<string, DriveFile[]> = {
   [AI_BRAIN_IDS.rootFolder]: [
     { id: AI_BRAIN_IDS.folders.memory, name: '01-Memory', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'حافظه بلندمدت، فرهنگ لغت، قوانین و تجربه‌ها' },
-    { id: AI_BRAIN_IDS.folders.skills, name: '02-Skills', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'کتابخانه ۹ اسکیل آماده برای آرنا و کلادکد' },
+    { id: AI_BRAIN_IDS.folders.skills, name: '02-Skills', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'کتابخانه ۱۲ اسکیل آماده برای آرنا و کلادکد' },
     { id: AI_BRAIN_IDS.folders.registry, name: '03-Registry', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'دفترکل پروژه‌ها، گیت‌هاب و فایل‌های نهایی' },
     { id: AI_BRAIN_IDS.folders.projects, name: '04-Projects', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'پروژه‌ها و آخرین نسخه نهایی هر محصول' },
     { id: AI_BRAIN_IDS.folders.chats, name: '05-Chats', mimeType: DRIVE_FOLDER_MIME, modifiedTime: now, description: 'آرشیو چت‌های مهم آرنا با لینک مستقیم گیت‌هاب' },
@@ -87,17 +87,22 @@ export const DEMO_CONTENT_BY_ID: Record<string, string> = {
 
 | تاریخ | عنوان چت | پروژه | خلاصه |
 | :--- | :--- | :--- | :--- |
-| 2026-11-20 | راه‌اندازی سیستم AI-Brain | \`ai-brain-os\` | طراحی و ساخت معماری سه‌پایه آرنا + درایو + گیت‌هاب همراه با ۹ اسکیل رسمی و قوانین جایگزینی خودکار نسخه |`,
+| 2026-11-20 | راه‌اندازی سیستم AI-Brain | \`ai-brain-os\` | طراحی و ساخت معماری سه‌پایه آرنا + درایو + گیت‌هاب همراه با ۱۲ اسکیل رسمی و قوانین جایگزینی خودکار نسخه |`,
 
-  [AI_BRAIN_IDS.files.skillsIndex]: `# کتابخانه اسکیل‌ها (۹ اسکیل نصب‌شده)
+  [AI_BRAIN_IDS.files.skillsIndex]: `# کتابخانه اسکیل‌ها (۱۲ اسکیل نصب‌شده)
 
 | نام اسکیل | منبع | کاربرد |
 | :--- | :--- | :--- |
-| \`project-lifecycle\` | Core | چرخه کامل پروژه و جایگزینی خودکار فایل درایو با لینک گیت‌هاب |
-| \`wordpress-plugin-builder\` | Core | ساخت، امنیت، بسته‌بندی و ریلیز افزونه وردپرس |
-| \`github-pages-deploy\` | Core | دیپلوی و ثبت صفحات \`.github.io\` |
-| \`frontend-design\` | Anthropic (1.1M) | طراحی رابط کاربری مدرن و متمایز |
-| \`web-design-guidelines\` | Vercel (886K) | ممیزی حرفه‌ای UX و دسترس‌پذیری |
-| \`memory-management\` | Anthropic | معماری حافظه دو لایه (Hot Cache + Glossary) |
-| \`context-engineering\` | Addy Osmani | مدیریت کانتکست و قرارداد تحویل جلسه |`,
+| \`project-lifecycle\` | Custom Core | چرخه کامل پروژه: ۱ ریپو، ورژنینگ و جایگزینی فایل قدیمی درایو با لینک گیت‌هاب |
+| \`wordpress-plugin-builder\` | Custom Core | ساخت، امنیت، بسته‌بندی و ریلیز افزونه وردپرس |
+| \`github-pages-deploy\` | Custom Core | دیپلوی و ثبت صفحات \`.github.io\` |
+| \`skill-creator\` | Custom Core | تبدیل فرایندهای اثبات‌شده به SKILL.md استاندارد |
+| \`find-skills\` | vercel-labs/skills | کشف و راستی‌آزمایی اسکیل‌های جامعه + نصب با npx skills |
+| \`frontend-design\` | anthropics/skills | طراحی رابط کاربری مدرن و متمایز |
+| \`web-design-guidelines\` | vercel-labs/agent-skills | ممیزی حرفه‌ای UX و دسترس‌پذیری |
+| \`context-engineering\` | addyosmani/agent-skills | مدیریت کانتکست، مرزهای اعتماد و قرارداد تحویل |
+| \`memory-management\` | anthropics/knowledge-work-plugins | معماری حافظه دو لایه (Hot Cache + Glossary) |
+| \`wp-elementor-studio\` | GitHub: refrence-theme-and-plugin-motion-creator | ساخت تم/افزونه با ویجت‌های عمیق المنتور |
+| \`real-plugin-demo\` | Custom Core (Seolity + AIWriter) | دموی واقعی افزونه در مرورگر از دارایی‌های خودش |
+| \`zhaket\` | Custom Core (Seolity + AIWriter Factory) | خط تولید محصول ژاکت تا ZIP آمادهٔ آپلود |`,
 };
